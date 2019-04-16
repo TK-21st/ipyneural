@@ -24,3 +24,9 @@ class NeuralWidget(DOMWidget):
     _view_module_version = Unicode(module_version).tag(sync=True)
 
     value = Unicode('Neural').tag(sync=True)
+    label = Unicode('').tag(sync=True)
+    latex = Unicode('').tag(sync=True)
+    graph = Bytes(b'').tag(sync=True)
+    figure = Bytes(b'').tag(sync=True)
+    figures = Dict({'None': ''}).tag(sync=True)
+    src = Dict({'nodes':[], 'edges': []}).tag(sync=True)
