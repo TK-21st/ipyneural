@@ -2,12 +2,18 @@
 // Distributed under the terms of the Modified BSD License.
 
 import {
-  DOMWidgetModel, DOMWidgetView, ISerializers
+  DOMWidgetModel, DOMWidgetView, ISerializers, uuid
 } from '@jupyter-widgets/base';
+
+import {
+  typeset
+} from '@jupyter-widgets/controls';
 
 import {
   MODULE_NAME, MODULE_VERSION
 } from './version';
+
+import '../css/neural.css';
 
 import * as d3 from 'd3';
 

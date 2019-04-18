@@ -13,7 +13,7 @@ import {
   IJupyterWidgetRegistry
  } from '@jupyter-widgets/base';
 
-import * as widgetExports from './widget';
+import * as widgetExports from './neural'
 
 import {
   MODULE_NAME, MODULE_VERSION

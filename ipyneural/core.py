@@ -8,10 +8,9 @@
 TODO: Add module docstring
 """
 
-from ipywidgets import DOMWidget
-from traitlets import Unicode
+from ipywidgets import DOMWidget, Output
+from traitlets import Bytes, Dict, Unicode
 from ._frontend import module_name, module_version
-
 
 class NeuralWidget(DOMWidget):
     """TODO: Add docstring here
