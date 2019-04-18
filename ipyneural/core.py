@@ -30,3 +30,18 @@ class NeuralWidget(DOMWidget):
     figure = Bytes(b'').tag(sync=True)
     figures = Dict({'None': ''}).tag(sync=True)
     src = Dict({'nodes':[], 'edges': []}).tag(sync=True)
+
+class MultiFigureWidget(DOMWidget):
+    """TODO: Add docstring here
+    """
+    _model_name = Unicode('MultiFigureWidget').tag(sync=True)
+    _model_module = Unicode(module_name).tag(sync=True)
+    _model_module_version = Unicode(module_version).tag(sync=True)
+    _view_name = Unicode('MultiFigureView').tag(sync=True)
+    _view_module = Unicode(module_name).tag(sync=True)
+    _view_module_version = Unicode(module_version).tag(sync=True)
+
+    id = Unicode('').tag(sync=True)
+    cid = Unicode('').tag(sync=True)
+    value = Unicode('').tag(sync=True)
+    figures = Dict({'None': ''}).tag(sync=True)

@@ -182,3 +182,149 @@ class NeuralView extends DOMWidgetView {
   svg: any | undefined;
   g: any | undefined;
 }
+
+export
+class MultiFigureModel extends DOMWidgetModel {
+  defaults() {
+    return {...super.defaults(),
+      _model_name: MultiFigureModel.model_name,
+      _model_module: MultiFigureModel.model_module,
+      _model_module_version: MultiFigureModel.model_module_version,
+      _view_name: MultiFigureModel.view_name,
+      _view_module: MultiFigureModel.view_module,
+      _view_module_version: MultiFigureModel.view_module_version,
+      id : '',
+      cid : '',
+      value : '',
+      figures : {}
+    };
+  }
+
+  static serializers: ISerializers = {
+      ...DOMWidgetModel.serializers,
+      // Add any extra serializers here
+    }
+
+  static model_name = 'MultiFigureModel';
+  static model_module = MODULE_NAME;
+  static model_module_version = MODULE_VERSION;
+  static view_name = 'MultiFigureView';   // Set to null if no view
+  static view_module = MODULE_NAME;   // Set to null if no view
+  static view_module_version = MODULE_VERSION;
+}
+
+export
+class MultiFigureView extends DOMWidgetView {
+
+  initialize() {
+    this.el.id = uuid() ;
+    this.model.set('id', this.el.id);
+    this.touch();
+  }
+
+  render() {
+    this.figures_changed();
+    this.model.on('change:figures', this.figures_changed, this);
+    this.model.on('change:value', this.value_changed, this);
+  }
+
+  figures_changed() {
+    let figures = this.model.get('figures');
+    this.el.innerHTML = "";
+
+    this.d3_el = d3.select(this.el);
+
+    for (const key of Object.keys(figures)) {
+      let obj = figures[key];
+      let d3_div = this.d3_el.append('div')
+        .attr('id', 'figs-' + key)
+        .attr('class', 'figure-container');
+      for (const attr of Object.keys(obj)) {
+        let div_fig = d3_div.append('div')
+          .attr('id', this.el.id + '-' + key + '-' + attr)
+          .attr('class', 'figure-wrapper');
+        let blob = new Blob([obj[attr]], {type: "image/PNG"});
+        let url = URL.createObjectURL(blob);
+        let ul = div_fig.append('ul');
+        ul.append('li').append('span').classed('add', true).html('&plus;');
+        ul.append('li').append('span').classed('up', true).html('&rarr;');
+        ul.append('li').append('span').classed('down', true).html('&rarr;');
+        div_fig.append('img').attr('src', url);
+        this.enable_wrapper_click(div_fig)
+      }
+    }
+  }
+
+  value_changed() {
+    let value = '#figs-' + this.model.get('value');
+    this.d3_el.selectAll('.figure-container').classed('selected', false);
+    this.d3_el.select(value).classed('selected', true);
+  }
+
+  enable_wrapper_click(wrapper: any | undefined) {
+    let _this = this;
+
+    wrapper.select('span.add')
+      .on('click', function () {
+        let target = d3.event.currentTarget;
+        let wrapper = d3.select(target.parentNode.parentNode.parentNode);
+
+        if (wrapper.classed('selected')) {
+          let _id = wrapper.attr('id');
+          d3.selectAll(`[id="${_id}"]`)
+            .each(function (d: any, i: any, n: any) {
+              let _wrapper = d3.select(n[i]);
+              if (_wrapper.classed('cloned')) {
+                _wrapper.remove();
+              } else {
+                _wrapper
+                  .classed('selected', false)
+                  .select('span.add').html('&plus;');
+              }
+            });
+        } else {
+          wrapper.select('span.add').html('&minus;');
+          wrapper.classed('selected', true);
+          let cid = _this.model.get('id') + '-div';
+          let selection = d3.selectAll(`[id="${cid}"]`);
+          if ( !selection.empty() ) {
+            selection
+              .each(function (d: any, i: any, n: any) {
+                  let clone = wrapper.node().cloneNode(true);
+                  let d3_clone = d3.select(clone).classed('cloned', true);
+                  _this.enable_wrapper_click(d3_clone);
+                  n[i].appendChild(clone);
+              });
+          }
+        }
+      });
+    wrapper.select('span.up')
+      .on('click', function () {
+        let target = d3.event.currentTarget;
+        let wrapper = target.parentNode.parentNode.parentNode;
+
+        if (wrapper.previousSibling != null) {
+          let container = wrapper.parentNode;
+          container.insertBefore(wrapper, wrapper.previousSibling);
+        }
+      });
+    wrapper.select('span.down')
+      .on('click', function () {
+        let target = d3.event.currentTarget;
+        let wrapper = target.parentNode.parentNode.parentNode;
+
+        if (wrapper.nextSibling != null) {
+          let container = wrapper.parentNode;
+          container.insertBefore(wrapper.nextSibling, wrapper);
+        }
+      });
+  }
+  move_forward(element: HTMLElement) {
+    if (element.previousSibling != null) {
+      let parent = element.parentNode;
+      if (parent != null)
+        parent.insertBefore(element, element.previousSibling);
+    }
+  }
+  d3_el : any | undefined;
+}
