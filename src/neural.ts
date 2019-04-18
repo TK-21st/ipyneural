@@ -48,8 +48,10 @@ export
 class NeuralView extends DOMWidgetView {
 
   render() {
+
     let svg = document.createElementNS(d3.namespaces.svg, 'svg');
     let tooltip = document.createElement('div');
+    tooltip.className = 'ipyneural-tooltip';
 
     this.svg = d3.select(svg);
     this.svg.attr('viewBox', "0 0 0 0");
@@ -58,19 +60,6 @@ class NeuralView extends DOMWidgetView {
     this.g = this.svg.append('g')
     this.g.attr("transform", "translate(5, 5)");
     this.tooltip = d3.select(tooltip);
-
-    this.tooltip
-      .style('opacity', 0)
-      .style('z-index', 1000)
-      .style('position', 'fixed')
-      .style('width', 'auto')
-      .style('overflow', 'auto')
-      .style('padding', '2px')
-      .style('font', '12px sans-serif')
-      .style('background', '#b4e4f9')
-      .style('border', '1px solid #F5F5F5')
-      .style('border-radius', '5px')
-      .style('pointer-events', 'none');
 
     let defs = this.g.append("defs");
 
