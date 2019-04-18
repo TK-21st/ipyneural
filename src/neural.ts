@@ -328,3 +328,53 @@ class MultiFigureView extends DOMWidgetView {
   }
   d3_el : any | undefined;
 }
+
+export
+class FigureCompareModel extends DOMWidgetModel {
+  defaults() {
+    return {...super.defaults(),
+      _model_name: FigureCompareModel.model_name,
+      _model_module: FigureCompareModel.model_module,
+      _model_module_version: FigureCompareModel.model_module_version,
+      _view_name: FigureCompareModel.view_name,
+      _view_module: FigureCompareModel.view_module,
+      _view_module_version: FigureCompareModel.view_module_version,
+      pid : ''
+    };
+  }
+
+  static serializers: ISerializers = {
+      ...DOMWidgetModel.serializers,
+      // Add any extra serializers here
+    }
+
+  static model_name = 'FigureCompareModel';
+  static model_module = MODULE_NAME;
+  static model_module_version = MODULE_VERSION;
+  static view_name = 'FigureCompareView';   // Set to null if no view
+  static view_module = MODULE_NAME;   // Set to null if no view
+  static view_module_version = MODULE_VERSION;
+}
+
+export
+class FigureCompareView extends DOMWidgetView {
+  render() {
+    this.pid_changed();
+    this.model.on('change:pid', this.pid_changed, this);
+  }
+  pid_changed() {
+    this.el.innerHTML = "";
+    let div = undefined;
+    let div_id = this.model.get('pid') + '-div';
+    let element = document.getElementById(div_id);
+    if (element == null) {
+      div = document.createElement('div');
+      div.className = 'figure-container selected';
+      div.id = div_id;
+    } else {
+      div = element.cloneNode(true);
+
+    }
+    this.el.appendChild(div);
+  }
+}

@@ -45,3 +45,15 @@ class MultiFigureWidget(DOMWidget):
     cid = Unicode('').tag(sync=True)
     value = Unicode('').tag(sync=True)
     figures = Dict({'None': ''}).tag(sync=True)
+
+class FigureCompareWidget(Output):
+    """TODO: Add docstring here
+    """
+    _model_name = Unicode('FigureCompareModel').tag(sync=True)
+    _model_module = Unicode(module_name).tag(sync=True)
+    _model_module_version = Unicode(module_version).tag(sync=True)
+    _view_name = Unicode('FigureCompareView').tag(sync=True)
+    _view_module = Unicode(module_name).tag(sync=True)
+    _view_module_version = Unicode(module_version).tag(sync=True)
+
+    pid = Unicode('').tag(sync=True)
