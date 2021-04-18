@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "ipyneural/extension": true
+  }
+}
