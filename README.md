@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh//ipyneural/branch/master/graph/badge.svg)](https://codecov.io/gh//ipyneural)
 
 
-A Custom Jupyter Widget Library for PyNeural
+A Custom Jupyter Widget Library for Neural
 
 ## Installation
 
